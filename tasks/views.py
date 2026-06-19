@@ -1,8 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
 from .models import Task
 from .serializers import TaskSerializer
+from .pagination import TaskPagination
+
 
 
 class TaskListCreateView(generics.ListCreateAPIView):
@@ -15,6 +17,10 @@ class TaskListCreateView(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        
+    pagination_class = TaskPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'description', 'status']
     
         
 
