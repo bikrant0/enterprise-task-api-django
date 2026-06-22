@@ -127,5 +127,8 @@ REST_FRAMEWORK = {
 
 #CLOUD DATABASE CONFIGURATION
 database_url = os.environ.get("DATABASE_URL")
+
+database_url = "postgresql://neondb_owner:npg_tYRJIc8gvp3A@ep-mute-leaf-atphruxh.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require"
+
 if database_url:
     DATABASES['default'] = dj_database_url.parse(database_url)
