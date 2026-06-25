@@ -28,3 +28,13 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    
+
+class NoteCreateView(generics.CreateAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        task_id = self.kwargs.get('task_id')
+        task = Task.objects.get(id=task_id, user=self.request.user)
+        serializer.save(task=task)
