@@ -1,81 +1,107 @@
-# Enterprise Task & Note Manager API
+Enterprise Task & Note Manager API
 
-A production-ready, multi-tenant RESTful API built with Django REST Framework. This project demonstrates enterprise-level backend architecture, focusing on relational data integrity, secure stateless authentication, and strict object-level permissions.
+A production-ready, multi-tenant RESTful API built with Django REST Framework. This project demonstrates enterprise-level backend architecture, focusing on relational data integrity, secure stateless authentication, strict object-level permissions, and a decoupled Client-Server architecture.
 
-## Tech Stack
-* **Framework:** Django & Django REST Framework (DRF)
-* **Database:** PostgreSQL
-* **Containerization:** Docker & Docker Compose
-* **Authentication:** JSON Web Tokens (JWT) via `djangorestframework-simplejwt`
-* **Adapter:** `psycopg2-binary`
+Enterprise Features Implemented
 
-## Enterprise Features Implemented
-1. **Custom User Model:** Replaced Django's default user model with a custom, email-based authentication system before initial migrations to ensure future scalability.
-2. **Relational Database Integrity:** Implemented 1-to-Many relationships (`User` -> `Tasks` -> `Notes`) utilizing Foreign Keys with `CASCADE` delete rules to prevent orphan records.
-3. **Nested Serializers:** Engineered complex JSON payloads where a single `Task` request dynamically fetches and nests all associated `Notes` using reverse relationships (`related_name`).
-4. **Data Isolation & Object-Level Permissions:** * Overrode QuerySets to ensure users can only ever retrieve their own data.
-    * Built custom permission classes (`IsOwner`) to verify database row ownership before allowing `UPDATE` or `DELETE` operations.
-5. **Stateless Security:** Secured all endpoints using dual-token JWT architecture (short-lived Access tokens, long-lived Refresh tokens).
-6. **Containerized Infrastructure:** Abstracted the PostgreSQL database into an isolated Docker container with local volume mapping.
+Custom User Model: Replaced Django's default user model with a custom, email-based authentication system before initial migrations to ensure future scalability.
 
-## Project Structure
-```text
+Relational Database Integrity: Implemented 1-to-Many relationships (User -> Tasks -> Notes) utilizing Foreign Keys with CASCADE delete rules to prevent orphan records.
+
+Nested Serializers: Engineered complex JSON payloads where a single Task request dynamically fetches and nests all associated Notes using reverse relationships (related_name).
+
+Data Isolation & Object-Level Permissions: * Overrode QuerySets to ensure users can only ever retrieve their own data.
+
+Built custom permission classes (IsOwner) to verify database row ownership before allowing UPDATE or DELETE operations.
+
+Decoupled Frontend Architecture: Built a standalone Vanilla JS and Bootstrap 5 frontend dashboard to consume the API, proving cross-origin resource sharing (CORS) and token injection capabilities.
+
+Automated CI/CD & Cloud Hosting: Abstracted deployment using GitHub Actions for automated testing and continuous delivery to Render, backed by a live serverless PostgreSQL database (Neon).
+
+Tech Stack
+
+Backend: Python 3, Django, Django REST Framework (DRF)
+
+Database: PostgreSQL (Cloud-hosted via Neon, psycopg2-binary)
+
+Frontend (Client): HTML5, Bootstrap 5, Vanilla JavaScript (Fetch API)
+
+Deployment & CI/CD: Render, GitHub Actions
+
+Security: JSON Web Tokens (JWT) via djangorestframework-simplejwt
+
+Project Structure
+
 enterprise_task_manager/
 │
 ├── core/                 # Main configuration, settings, and global URLs
 ├── accounts/             # App: Handles Custom User Model & Auth Logic
 ├── tasks/                # App: Handles Task & Note models, views, and permissions
-├── docker-compose.yml    # PostgreSQL container configuration (Port 5466)
+├── frontend/             # Client: Standalone HTML/JS Dashboard
 ├── requirements.txt      # Python dependencies
 └── manage.py             # Django entry point
 
 
-## API Endpoints
-**Authentication** (accounts & core)
+📡 API Endpoints
 
-* 'POST /api/auth/login/' - Accepts username/password, returns JWT access and refresh tokens.
+Authentication (accounts & core)
 
-* 'POST /api/auth/refresh/' - Accepts a refresh token to generate a new access token.
+POST /api/auth/login/ - Accepts username/password, returns JWT Access and Refresh tokens.
 
-**Tasks & Notes** (tasks) - Requires JWT Access Token
+POST /api/auth/refresh/ - Accepts a refresh token to generate a new access token.
 
-* 'GET /api/tasks/' - Lists all tasks belonging to the authenticated user (Notes nested inside).
+Tasks (tasks) - Requires JWT Access Token
 
-* 'POST /api/tasks/' - Creates a new task and automatically assigns it to the authenticated user.
+GET /api/tasks/ - Lists all tasks for the logged-in user (supports ?search= and ?page=).
 
-* 'GET /api/tasks/<id>/' - Retrieves details of a specific task (must be the owner).
+POST /api/tasks/ - Creates a new task and assigns it to the authenticated user.
 
-* 'PUT /api/tasks/<id>/' - Updates a specific task (must be the owner).
+GET /api/tasks/<id>/ - Retrieves details of a specific task (must be the owner).
 
-* 'DELETE /api/tasks/<id>/'- Deletes a specific task and cascades deletion to all attached notes (must be the owner).
+PUT /api/tasks/<id>/ - Updates a specific task (must be the owner).
 
-### Local Setup Instructions
-1. **Clone the repository**
-git clone <your-repo-url>
-cd enterprise_task_manager
+DELETE /api/tasks/<id>/- Deletes a specific task and cascades deletion to all attached notes.
 
-2. **Spin up the PostgreSQL Database via Docker**
-docker-compose up -d
-(Note: Ensure Docker Desktop is running. The database runs on port 5466 to avoid conflicts).
+Notes (tasks) - Requires JWT Access Token
 
-3.**Set up the Python Virtual Environment**
+POST /api/tasks/<id>/notes/ - Creates a new note attached to a specific task.
 
-### Bash
+💻 Local Setup Instructions
+
+Clone the repository
+
+git clone [https://github.com/bikrant0/enterprise-task-api-django.git](https://github.com/bikrant0/enterprise-task-api-django.git)
+cd enterprise-task-api-django
+
+
+Set up the Python Virtual Environment
+
+# Windows
 python -m venv venv
+venv\Scripts\activate 
 
-## Activate on Windows:
-venv\Scripts\activate  
-## Activate on Mac/Linux:
-## source venv/bin/activate 
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
 
-4. **Install Dependencies**
+
+Install Dependencies
+
 pip install -r requirements.txt
 
-5. **Apply Database Migrations**
+
+Apply Database Migrations
+
 python manage.py makemigrations accounts
 python manage.py makemigrations tasks
 python manage.py migrate
 
-6. **Create a Superuser & Run the Server **
+
+Create a Superuser & Run the Server
+
 python manage.py createsuperuser
 python manage.py runserver
+
+
+Run the Frontend Dashboard
+Open frontend/index.html directly in your web browser (Chrome/Edge/Firefox) to interact with the API visually.
