@@ -1,8 +1,8 @@
-Enterprise Task & Note Manager API
+### Enterprise Task & Note Manager API
 
 A production-ready, multi-tenant RESTful API built with Django REST Framework. This project demonstrates enterprise-level backend architecture, focusing on relational data integrity, secure stateless authentication, strict object-level permissions, and a decoupled Client-Server architecture.
 
-Enterprise Features Implemented
+## Enterprise Features Implemented
 
 Custom User Model: Replaced Django's default user model with a custom, email-based authentication system before initial migrations to ensure future scalability.
 
@@ -18,7 +18,7 @@ Decoupled Frontend Architecture: Built a standalone Vanilla JS and Bootstrap 5 f
 
 Automated CI/CD & Cloud Hosting: Abstracted deployment using GitHub Actions for automated testing and continuous delivery to Render, backed by a live serverless PostgreSQL database (Neon).
 
-Tech Stack
+## Tech Stack
 
 Backend: Python 3, Django, Django REST Framework (DRF)
 
@@ -30,7 +30,7 @@ Deployment & CI/CD: Render, GitHub Actions
 
 Security: JSON Web Tokens (JWT) via djangorestframework-simplejwt
 
-Project Structure
+## Project Structure
 
 enterprise_task_manager/
 │
@@ -42,7 +42,7 @@ enterprise_task_manager/
 └── manage.py             # Django entry point
 
 
-📡 API Endpoints
+## API Endpoints
 
 Authentication (accounts & core)
 
@@ -66,9 +66,9 @@ Notes (tasks) - Requires JWT Access Token
 
 POST /api/tasks/<id>/notes/ - Creates a new note attached to a specific task.
 
-💻 Local Setup Instructions
+## Local Setup Instructions
 
-Clone the repository
+# Clone the repository
 
 git clone [https://github.com/bikrant0/enterprise-task-api-django.git](https://github.com/bikrant0/enterprise-task-api-django.git)
 cd enterprise-task-api-django
